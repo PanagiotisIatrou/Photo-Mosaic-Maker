@@ -1,5 +1,5 @@
 # Photo-Mosaic-Maker
-A python command line tool for creating effortless photo mosaics
+A python command line tool for creating photo mosaics effortlessly
 
 ![](Photo-Mosaic-Maker/Examples/out1.jpg)
 (Download the mosaic and zoom in to see the cells.)
