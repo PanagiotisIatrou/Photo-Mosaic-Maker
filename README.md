@@ -7,6 +7,7 @@ A python command line tool for creating effortless photo mosaics
 Clone the repository or just download the repository as a .zip
 
 ## How to use
+Open a terminal and navigate to the project directory.  
 Depending on the platform, you can run the program by:  
 **Linux:** ```python3 mosaic.py```  
 **Windows:** ```py mosaic.py```
@@ -46,5 +47,5 @@ Sets the height of the mosaic grid.
 * .png
 
 ## Examples
-```python3 mosaic.py --input Examples/photo1.jpg --input_cells_path Examples/Images --output Examples/out1.jpg```
-This creates the image on the top.
+```python3 mosaic.py --input Examples/photo1.jpg --input_cells_path Examples/Images --output Examples/out1.jpg```  
+This creates the image above.
