@@ -2,4 +2,4 @@ __pycache__/
 *.jpg
 *.jpeg
 *.png
-!*/Examples/**
+!Photo-Mosaic-Maker/Examples/
