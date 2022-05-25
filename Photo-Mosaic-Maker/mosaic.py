@@ -9,7 +9,7 @@ import sys
 
 if __name__ == "__main__":
     edited_path = "temp"
-    original_path = "Images"
+    original_path = None
     allowed_extensions = [".png", ".jpg", ".jpeg"]
     available_modes = ["blend", "original"]
     input_file = None
@@ -46,6 +46,8 @@ if __name__ == "__main__":
             resolution_scale = float(sys.argv[i + 1])
         elif (sys.argv[i] == "--mode"):
             mode = sys.argv[i + 1]
+        elif (sys.argv[i] == "--input_cells_path"):
+            original_path = sys.argv[i + 1]
         else:
             print(f"Unknown argument {sys.argv[i]}")
             exit(1)
@@ -86,6 +88,10 @@ if __name__ == "__main__":
     if (resolution_scale < 0):
         print("Argument --resolution_scale must be bigger than 0")
         exit(1)
+    
+    if (original_path == None):
+        print("Argument --input_cells_path must be specified")
+        exit(1)
 
     if (os.path.splitext(output_file)[1] not in allowed_extensions):
         print("The only image formats supported are " + ", ".join(allowed_extensions))
@@ -112,6 +118,9 @@ if __name__ == "__main__":
     # Resize input images
     file_names = [f for f in listdir(original_path) if isfile(join(original_path, f))]
     file_names = [f for f in file_names if os.path.splitext(f)[1] in allowed_extensions]
+    if (len(file_names) == 0):
+        print(f"There are no valid image files at {original_path}")
+        exit(1)
     for file_name in file_names:
         image = Image.open(original_path + "/" + file_name)
         image = image.resize((cell_x, cell_y))

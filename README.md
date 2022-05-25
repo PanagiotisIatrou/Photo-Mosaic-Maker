@@ -11,8 +11,10 @@ Depending on the platform, you can run the program by:
 **Linux:** ```python3 mosaic.py```  
 **Windows:** ```py mosaic.py```
 
-The only needed argument is the ```--input filename.jpg``` which sets the image to create a mosaic out of.  
-Put all the images that are going to be used as cells in the Images/ folder.
+The only needed arguments are the:  
+* ```--input filename.jpg``` which sets the image to create a mosaic out of.
+* ```--input_cells_path path/to/Images``` which sets the path that contains all the images that will be used as cells.  
+Put all the images that are going to be used as cells in the specified path/to/Images folder.
 
 Also, see the examples below.
 
@@ -21,6 +23,8 @@ Also, see the examples below.
 Saves the output image as filename.jpg.  
 * ```--input filename.jpg```  
 Takes filename.jpg as the input image.
+* ```--input_cells_path path/to/Images```  
+Sets the path that contains all the images that will be used as cells
 * ```--mode mode_selected```  
 Sets the current mode to mode_selected. There are currently 2 modes available, **blend** and **original**. When ```--mode``` is not specified, **blend** mode is selected by default. **blend** mode uses a random image from the Images/ folder and applies a tint in each cell to match the input image color. **original** mode takes the average color for each image in the Images/ folder and tries to match the input image pixels as close as possible without tampering with the color.
 * ```--blend_amount number```  
