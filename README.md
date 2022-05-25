@@ -46,5 +46,5 @@ Sets the height of the mosaic grid.
 * .png
 
 ## Examples
-```python3 mosaic.py --input Examples/photo1.jpg --output out1.jpg```
+```python3 mosaic.py --input Examples/photo1.jpg --input_cells_path Examples/Images --output Examples/out1.jpg```
 This creates the image on the top.
