@@ -6,10 +6,10 @@ import os
 import operator
 from os.path import isfile, join
 import sys
-from resize import create_folders, empty_edited_folder, resize_photos
 
 if __name__ == "__main__":
     edited_path = "temp"
+    original_path = "Images"
     allowed_extensions = [".png", ".jpg", ".jpeg"]
     available_modes = ["blend", "original"]
     input_file = None
@@ -99,10 +99,23 @@ if __name__ == "__main__":
     if (cell_y == None):
         cell_y = 50
 
-    # Empty temp/ folder and resize input images
-    create_folders()
-    empty_edited_folder()
-    resize_photos((cell_x, cell_y), allowed_extensions)
+    # Create directories
+    if not os.path.exists(original_path):
+        os.mkdir(original_path) 
+    if not os.path.exists(edited_path):
+        os.mkdir(edited_path) 
+
+    # Empty temp folder
+    for f in os.listdir(edited_path):
+        os.remove(os.path.join(edited_path, f))
+
+    # Resize input images
+    file_names = [f for f in listdir(original_path) if isfile(join(original_path, f))]
+    file_names = [f for f in file_names if os.path.splitext(f)[1] in allowed_extensions]
+    for file_name in file_names:
+        image = Image.open(original_path + "/" + file_name)
+        image = image.resize((cell_x, cell_y))
+        image.save(edited_path + "/" + file_name)
 
     # Get all the images in the path (only allow specific extensions)
     file_names = [f for f in listdir(edited_path) if isfile(join(edited_path, f))]
