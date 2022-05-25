@@ -2,6 +2,7 @@
 A python command line tool for creating effortless photo mosaics
 
 ![](Photo-Mosaic-Maker/Examples/out1.jpg)
+(Download the mosaic and zoom in to see the cells.)
 
 ## How to install
 Clone the repository or just download the repository as a .zip
