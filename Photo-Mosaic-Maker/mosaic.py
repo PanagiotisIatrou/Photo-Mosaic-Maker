@@ -127,9 +127,7 @@ if __name__ == "__main__":
     for file_name in file_names:
         image = Image.open(original_path + "/" + file_name)
         image = image.resize((cell_x, cell_y))
-        image = image.convert("RGBA")
-        new_file_name = os.path.splitext(file_name)[0] + '.png'
-        image.save(edited_path + "/" + new_file_name)
+        image.save(edited_path + "/" + file_name)
 
     # Get all the images in the path (only allow specific extensions)
     file_names = [f for f in listdir(edited_path) if isfile(join(edited_path, f))]
@@ -139,7 +137,7 @@ if __name__ == "__main__":
     images = {}
     for image_name in file_names:
         img = Image.open(edited_path + "/" + image_name)
-        images[image_name] = img
+        images[image_name] = img.convert("RGBA")
     
     # Open the input image
     input_image = Image.open(input_file)
