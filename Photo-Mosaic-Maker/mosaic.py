@@ -93,10 +93,13 @@ if __name__ == "__main__":
         print("Argument --input_cells_path must be specified")
         exit(1)
 
-    if (os.path.splitext(output_file)[1] not in allowed_extensions):
+    output_ext = os.path.splitext(output_file)[1]
+    if (output_ext not in allowed_extensions):
         print("The only image formats supported are " + ", ".join(allowed_extensions))
         exit(1)
-    if (os.path.splitext(input_file)[1] not in allowed_extensions):
+
+    input_ext = os.path.splitext(input_file)[1]
+    if (input_ext not in allowed_extensions):
         print("The only image formats supported are " + ", ".join(allowed_extensions))
         exit(1)
     
@@ -115,7 +118,7 @@ if __name__ == "__main__":
     for f in os.listdir(edited_path):
         os.remove(os.path.join(edited_path, f))
 
-    # Resize input images
+    # Resize input images and convert them to png
     file_names = [f for f in listdir(original_path) if isfile(join(original_path, f))]
     file_names = [f for f in file_names if os.path.splitext(f)[1] in allowed_extensions]
     if (len(file_names) == 0):
@@ -124,7 +127,9 @@ if __name__ == "__main__":
     for file_name in file_names:
         image = Image.open(original_path + "/" + file_name)
         image = image.resize((cell_x, cell_y))
-        image.save(edited_path + "/" + file_name)
+        image = image.convert("RGBA")
+        new_file_name = os.path.splitext(file_name)[0] + '.png'
+        image.save(edited_path + "/" + new_file_name)
 
     # Get all the images in the path (only allow specific extensions)
     file_names = [f for f in listdir(edited_path) if isfile(join(edited_path, f))]
@@ -138,6 +143,7 @@ if __name__ == "__main__":
     
     # Open the input image
     input_image = Image.open(input_file)
+    input_image = input_image.convert("RGBA")
 
     # Calculate the grid size if grid sizes are not set
     if (grid_x == None or grid_y == None):
@@ -150,7 +156,7 @@ if __name__ == "__main__":
 
     # Resize input image
     input_image = input_image.resize((grid_x, grid_y))
-    new_image = Image.new(mode="RGB", size=(cell_x * grid_x, cell_y * grid_y))
+    new_image = Image.new(mode="RGBA", size=(cell_x * grid_x, cell_y * grid_y))
 
     # Edit the image according to --mode
     if (mode == "original"):
@@ -163,7 +169,7 @@ if __name__ == "__main__":
                 for j in range(img_size[1]):
                     col = image.getpixel((i, j))
                     if not image_name in average_colors.keys():
-                        average_colors[image_name] = (0, 0, 0)
+                        average_colors[image_name] = (0, 0, 0, 0)
                     else:
                         average_colors[image_name] = tuple(map(operator.add, average_colors[image_name], col))
             sum = average_colors[image_name]
@@ -175,26 +181,30 @@ if __name__ == "__main__":
         input_image = enhancer.enhance(1.25)
         for i in range(grid_x):
             for j in range(grid_y):
-                r, g, b = input_image.getpixel((i, j))
+                r, g, b, a = input_image.getpixel((i, j))
                 min_loss = 1000 # Can never be more than 1000 (max 255 * 3)
                 image_chosen = None
                 for image_name, col in average_colors.items():
-                    loss = abs(col[0] - r) + abs(col[1] - g) + abs(col[2] - b)
+                    loss = abs(col[0] - r) + abs(col[1] - g) + abs(col[2] - b) + abs(col[3] - a)
                     if (loss < min_loss):
                         min_loss = loss
                         image_chosen = image_name
                 new_image.paste(images[image_chosen], (i * cell_x, j * cell_y))
-        new_image.save(output_file)
     elif (mode == "blend"):
         for i in range(grid_x):
             for j in range(grid_y):
-                r, g, b = input_image.getpixel((i, j))
+                col = input_image.getpixel((i, j))
                 image_chosen = images[file_names[randint(0, len(file_names) - 1)]]
                 # Tint image
-                tint = Image.new("RGB", (image_chosen.size), color=(r, g, b))
+                tint = Image.new("RGBA", (image_chosen.size), color=col)
                 img = Image.blend(image_chosen, tint, blend_amount)
                 new_image.paste(img, (i * cell_x, j * cell_y))
-        new_image.save(output_file)
     else:
         print("Unknown mode")
         exit(1)
+    
+    if (output_ext == ".png"):
+        new_image = new_image.convert("RGBA")
+    elif (output_ext == ".jpg" or output_ext == ".jpeg"):
+        new_image = new_image.convert("RGB")
+    new_image.save(output_file)
